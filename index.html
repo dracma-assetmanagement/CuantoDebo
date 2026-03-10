@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuanto Debo — Fin Silver</title>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg: #f0f0f0;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --text-light: #888888;
+            --accent: #555555;
+            --accent-hover: #333333;
+            --border: #e0e0e0;
+            --shadow: 0 2px 20px rgba(0,0,0,0.06);
+            --radius: 12px;
+            --green: #2ecc71;
+            --red: #e74c3c;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body { font-family: 'Work Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; }
+
+        header { width: 100%; padding: 28px 0; text-align: center; background: var(--bg); border-bottom: 1px solid var(--border); }
+        header .logo { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 6px; line-height: 1.15; }
+        .logo .fin { color: var(--text); font-weight: 700; }
+        .logo .silver { color: var(--text-light); font-weight: 400; }
+
+        main { width: 100%; max-width: 540px; padding: 40px 20px 60px; flex: 1; }
+
+        h1 { font-family: 'Bebas Neue', sans-serif; font-size: 42px; font-weight: 400; text-align: center; letter-spacing: 2px; margin-bottom: 6px; }
+        .subtitle { text-align: center; color: var(--text-light); font-size: 14px; font-weight: 300; margin-bottom: 36px; }
+
+        .sc { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; margin-bottom: 20px; }
+
+        .fl { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-light); margin-bottom: 14px; font-weight: 500; }
+
+        /* GROUPS LIST */
+        .groups-empty { text-align: center; padding: 30px 0; color: var(--text-light); font-size: 14px; font-weight: 300; }
+
+        .group-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.2s ease; }
+        .group-item:last-child { border-bottom: none; }
+        .group-item:hover { padding-left: 6px; }
+
+        .group-info { flex: 1; }
+        .group-name { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+        .group-meta { font-size: 11px; color: var(--text-light); }
+        .group-total { font-family: 'Bebas Neue', sans-serif; font-size: 22px; margin-right: 12px; }
+        .group-arrow { color: var(--text-light); font-size: 18px; }
+
+        .group-actions { display: flex; gap: 6px; }
+        .group-del { width: 28px; height: 28px; border: none; background: transparent; cursor: pointer; color: var(--text-light); font-size: 16px; border-radius: 50%; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+        .group-del:hover { background: #fee; color: var(--red); }
+
+        .btn { padding: 14px; font-family: 'Work Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; border: none; border-radius: 8px; cursor: pointer; transition: all 0.25s ease; width: 100%; }
+        .btn-primary { background: var(--text); color: #fff; }
+        .btn-primary:hover { background: #000; transform: translateY(-1px); }
+        .btn-secondary { background: transparent; border: 2px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { border-color: var(--text); }
+        .btn-small { padding: 10px 18px; font-size: 11px; width: auto; }
+        .btn-danger { background: transparent; border: 2px solid #f5c6c6; color: var(--red); }
+        .btn-danger:hover { border-color: var(--red); background: #fff5f5; }
+
+        .btn-row { display: flex; gap: 10px; margin-top: 14px; }
+        .btn-row .btn { flex: 1; }
+
+        /* FORM INPUTS */
+        .finput { width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Work Sans', sans-serif; font-size: 14px; color: var(--text); background: #fafafa; transition: border-color 0.25s; }
+        .finput:focus { outline: none; border-color: var(--text); background: #fff; }
+        .finput::placeholder { color: #ccc; }
+
+        .form-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .form-row .finput { flex: 1; }
+
+        /* PARTICIPANTS */
+        .participants-list { margin: 14px 0; }
+        .participant-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+        .participant-row:last-child { border-bottom: none; }
+        .participant-name { flex: 1; font-size: 14px; font-weight: 500; }
+        .participant-paid { font-family: 'Bebas Neue', sans-serif; font-size: 20px; }
+        .participant-remove { width: 26px; height: 26px; border: none; background: transparent; cursor: pointer; color: #ccc; font-size: 18px; border-radius: 50%; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+        .participant-remove:hover { color: var(--red); background: #fee; }
+
+        /* RESULTS */
+        .result-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 28px; margin-bottom: 20px; position: relative; overflow: hidden; }
+        .result-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--text); }
+
+        .result-summary { display: flex; justify-content: center; gap: 32px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .summary-item { text-align: center; }
+        .summary-value { font-family: 'Bebas Neue', sans-serif; font-size: 32px; line-height: 1; }
+        .summary-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text-light); margin-top: 2px; }
+
+        .transfer-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
+        .transfer-item:last-child { border-bottom: none; }
+        .transfer-from { font-size: 14px; font-weight: 600; flex: 1; }
+        .transfer-arrow { margin: 0 12px; color: var(--text-light); font-size: 16px; }
+        .transfer-to { font-size: 14px; font-weight: 600; flex: 1; text-align: right; }
+        .transfer-amount { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--text); margin-left: 16px; white-space: nowrap; }
+
+        /* BALANCE LIST */
+        .balance-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .balance-item:last-child { border-bottom: none; }
+        .balance-name { font-size: 14px; font-weight: 500; }
+        .balance-paid { font-size: 12px; color: var(--text-light); }
+        .balance-amount { font-family: 'Bebas Neue', sans-serif; font-size: 20px; }
+        .balance-pos { color: var(--green); }
+        .balance-neg { color: var(--red); }
+        .balance-zero { color: var(--text-light); }
+
+        .balance-bar-container { flex: 1; margin: 0 14px; height: 6px; background: #f0f0f0; border-radius: 3px; overflow: hidden; }
+        .balance-bar { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+
+        /* VIEWS */
+        .view { display: none; }
+        .view.active { display: block; }
+
+        /* BACK BUTTON */
+        .back-btn { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; cursor: pointer; font-family: 'Work Sans', sans-serif; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-light); margin-bottom: 20px; padding: 8px 0; transition: color 0.2s; }
+        .back-btn:hover { color: var(--text); }
+        .back-btn svg { width: 16px; height: 16px; }
+
+        .notification { position: fixed; top: -80px; left: 50%; transform: translateX(-50%); background: var(--text); color: #fff; padding: 16px 32px; border-radius: var(--radius); font-size: 13px; font-weight: 500; letter-spacing: 1px; z-index: 100; transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 8px 30px rgba(0,0,0,0.15); white-space: nowrap; }
+        .notification.show { top: 24px; }
+
+        footer { width: 100%; padding: 24px 0; text-align: center; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--text-light); }
+        footer strong { color: var(--text); font-weight: 600; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-in { animation: fadeIn 0.35s ease forwards; }
+
+        @media (max-width: 480px) {
+            main { padding: 28px 14px 40px; }
+            h1 { font-size: 34px; }
+            .sc { padding: 22px 18px; }
+            .form-row { flex-direction: column; }
+            .result-summary { gap: 18px; }
+            .summary-value { font-size: 26px; }
+            .btn-row { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <header><div class="logo"><span class="fin">FIN</span><br><span class="silver">SILVER</span></div></header>
+    <div class="notification" id="notification"></div>
+
+    <main>
+        <h1>Cuanto Debo</h1>
+        <p class="subtitle">Dividí gastos entre amigos y sabé quién le debe a quién</p>
+
+        <!-- ===== VIEW: GROUPS LIST ===== -->
+        <div class="view active" id="viewGroups">
+            <div class="sc">
+                <div class="fl">Mis grupos de gastos</div>
+                <div id="groupsList"></div>
+            </div>
+            <button class="btn btn-primary" onclick="showNewGroup()">+ Nuevo grupo</button>
+        </div>
+
+        <!-- ===== VIEW: NEW GROUP ===== -->
+        <div class="view" id="viewNew">
+            <button class="back-btn" onclick="showView('viewGroups')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                Volver
+            </button>
+            <div class="sc">
+                <div class="fl">Nuevo grupo</div>
+                <input class="finput" type="text" id="newGroupName" placeholder="Nombre del grupo (ej: Asado del sábado)" style="margin-bottom:14px;">
+                <div class="fl" style="margin-top:8px;">Participantes y gastos</div>
+                <div class="form-row">
+                    <input class="finput" type="text" id="newName" placeholder="Nombre">
+                    <input class="finput" type="number" id="newPaid" placeholder="$ Gastó" min="0" step="0.01">
+                    <button class="btn btn-primary btn-small" onclick="addParticipant()">+</button>
+                </div>
+                <div class="participants-list" id="participantsList"></div>
+                <button class="btn btn-primary" onclick="saveGroup()" style="margin-top:10px;">Calcular y guardar</button>
+            </div>
+        </div>
+
+        <!-- ===== VIEW: GROUP DETAIL ===== -->
+        <div class="view" id="viewDetail">
+            <button class="back-btn" onclick="showView('viewGroups')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                Volver
+            </button>
+
+            <div id="detailContent"></div>
+
+            <div class="btn-row">
+                <button class="btn btn-secondary" onclick="downloadGroupPDF()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;display:inline;vertical-align:middle;margin-right:4px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Descargar PDF
+                </button>
+                <button class="btn btn-danger" onclick="deleteCurrentGroup()">Eliminar grupo</button>
+            </div>
+        </div>
+    </main>
+
+    <footer>Grupo <strong>Fin-Silver</strong></footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        // ========== STATE ==========
+        let groups = JSON.parse(localStorage.getItem('cuantodebo_groups') || '[]');
+        let tempParticipants = [];
+        let currentGroupId = null;
+
+        // ========== VIEWS ==========
+        function showView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById(id).classList.add('animate-in');
+        }
+
+        function showNewGroup() {
+            tempParticipants = [];
+            document.getElementById('newGroupName').value = '';
+            document.getElementById('newName').value = '';
+            document.getElementById('newPaid').value = '';
+            renderTempParticipants();
+            showView('viewNew');
+            document.getElementById('newGroupName').focus();
+        }
+
+        // ========== GROUPS LIST ==========
+        function renderGroups() {
+            const container = document.getElementById('groupsList');
+            if (groups.length === 0) {
+                container.innerHTML = '<div class="groups-empty">No tenés grupos todavía.<br>Creá uno para empezar a dividir gastos.</div>';
+                return;
+            }
+            container.innerHTML = groups.map((g, i) => `
+                <div class="group-item" onclick="openGroup('${g.id}')">
+                    <div class="group-info">
+                        <div class="group-name">${esc(g.name)}</div>
+                        <div class="group-meta">${g.participants.length} personas · ${formatDate(g.date)}</div>
+                    </div>
+                    <div class="group-total">$${formatNum(g.total)}</div>
+                    <div class="group-actions">
+                        <button class="group-del" onclick="event.stopPropagation(); deleteGroup('${g.id}')" title="Eliminar">×</button>
+                    </div>
+                    <div class="group-arrow">›</div>
+                </div>
+            `).join('');
+        }
+
+        // ========== TEMP PARTICIPANTS ==========
+        function addParticipant() {
+            const nameInput = document.getElementById('newName');
+            const paidInput = document.getElementById('newPaid');
+            const name = nameInput.value.trim();
+            const paid = parseFloat(paidInput.value) || 0;
+
+            if (!name) { showNotification('Escribí un nombre'); nameInput.focus(); return; }
+            if (tempParticipants.find(p => p.name.toLowerCase() === name.toLowerCase())) {
+                showNotification('Ya existe ese participante'); return;
+            }
+
+            tempParticipants.push({ name, paid });
+            nameInput.value = '';
+            paidInput.value = '';
+            nameInput.focus();
+            renderTempParticipants();
+        }
+
+        function removeTempParticipant(i) {
+            tempParticipants.splice(i, 1);
+            renderTempParticipants();
+        }
+
+        function renderTempParticipants() {
+            const container = document.getElementById('participantsList');
+            if (tempParticipants.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+            container.innerHTML = tempParticipants.map((p, i) => `
+                <div class="participant-row">
+                    <div class="participant-name">${esc(p.name)}</div>
+                    <div class="participant-paid">$${formatNum(p.paid)}</div>
+                    <button class="participant-remove" onclick="removeTempParticipant(${i})">×</button>
+                </div>
+            `).join('');
+        }
+
+        // ========== SAVE GROUP ==========
+        function saveGroup() {
+            const name = document.getElementById('newGroupName').value.trim();
+            if (!name) { showNotification('Ponele un nombre al grupo'); return; }
+            if (tempParticipants.length < 2) { showNotification('Agregá al menos 2 personas'); return; }
+
+            const total = tempParticipants.reduce((s, p) => s + p.paid, 0);
+            const perPerson = total / tempParticipants.length;
+            const balances = tempParticipants.map(p => ({
+                name: p.name,
+                paid: p.paid,
+                balance: p.paid - perPerson
+            }));
+            const transfers = calculateTransfers(balances);
+
+            const group = {
+                id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+                name,
+                date: new Date().toISOString(),
+                participants: tempParticipants.map(p => ({ ...p })),
+                total,
+                perPerson,
+                balances,
+                transfers
+            };
+
+            groups.unshift(group);
+            saveToStorage();
+            renderGroups();
+            openGroup(group.id);
+            showNotification('Grupo guardado');
+        }
+
+        // ========== CALCULATE TRANSFERS ==========
+        function calculateTransfers(balances) {
+            let debtors = balances.filter(b => b.balance < -0.01).map(b => ({ name: b.name, amount: Math.abs(b.balance) }));
+            let creditors = balances.filter(b => b.balance > 0.01).map(b => ({ name: b.name, amount: b.balance }));
+
+            debtors.sort((a, b) => b.amount - a.amount);
+            creditors.sort((a, b) => b.amount - a.amount);
+
+            let transfers = [];
+            let di = 0, ci = 0;
+
+            while (di < debtors.length && ci < creditors.length) {
+                const amount = Math.min(debtors[di].amount, creditors[ci].amount);
+                if (amount > 0.01) {
+                    transfers.push({
+                        from: debtors[di].name,
+                        to: creditors[ci].name,
+                        amount: Math.round(amount * 100) / 100
+                    });
+                }
+                debtors[di].amount -= amount;
+                creditors[ci].amount -= amount;
+                if (debtors[di].amount < 0.01) di++;
+                if (creditors[ci].amount < 0.01) ci++;
+            }
+
+            return transfers;
+        }
+
+        // ========== OPEN GROUP ==========
+        function openGroup(id) {
+            const group = groups.find(g => g.id === id);
+            if (!group) return;
+            currentGroupId = id;
+
+            const maxPaid = Math.max(...group.participants.map(p => p.paid));
+
+            const container = document.getElementById('detailContent');
+            container.innerHTML = `
+                <div class="sc" style="text-align:center; margin-bottom:20px;">
+                    <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; letter-spacing:2px;">${esc(group.name)}</div>
+                    <div style="font-size:12px; color:var(--text-light); margin-top:4px;">${formatDate(group.date)} · ${group.participants.length} personas</div>
+                </div>
+
+                <div class="result-card animate-in">
+                    <div class="result-summary">
+                        <div class="summary-item">
+                            <div class="summary-value">$${formatNum(group.total)}</div>
+                            <div class="summary-label">Total gastado</div>
+                        </div>
+                        <div class="summary-item">
+                            <div class="summary-value">$${formatNum(group.perPerson)}</div>
+                            <div class="summary-label">Por persona</div>
+                        </div>
+                    </div>
+
+                    <div class="fl">Quién le paga a quién</div>
+                    ${group.transfers.length === 0 
+                        ? '<div style="text-align:center;color:var(--text-light);padding:16px 0;font-size:14px;">¡Ya están todos parejos!</div>'
+                        : group.transfers.map(t => `
+                        <div class="transfer-item">
+                            <div class="transfer-from">${esc(t.from)}</div>
+                            <div class="transfer-arrow">→</div>
+                            <div class="transfer-to">${esc(t.to)}</div>
+                            <div class="transfer-amount">$${formatNum(t.amount)}</div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="sc animate-in">
+                    <div class="fl">Balance por persona</div>
+                    ${group.balances.map(b => {
+                        const pct = maxPaid > 0 ? (b.paid / maxPaid) * 100 : 0;
+                        const cls = b.balance > 0.01 ? 'balance-pos' : b.balance < -0.01 ? 'balance-neg' : 'balance-zero';
+                        const sign = b.balance > 0.01 ? '+' : '';
+                        return `
+                        <div class="balance-item">
+                            <div style="flex:1">
+                                <div class="balance-name">${esc(b.name)}</div>
+                                <div class="balance-paid">Gastó $${formatNum(b.paid)}</div>
+                            </div>
+                            <div class="balance-amount ${cls}">${sign}$${formatNum(Math.abs(b.balance))}</div>
+                        </div>`;
+                    }).join('')}
+                </div>
+            `;
+
+            showView('viewDetail');
+        }
+
+        // ========== DELETE ==========
+        function deleteGroup(id) {
+            if (!confirm('¿Eliminar este grupo?')) return;
+            groups = groups.filter(g => g.id !== id);
+            saveToStorage();
+            renderGroups();
+            showNotification('Grupo eliminado');
+        }
+
+        function deleteCurrentGroup() {
+            if (!currentGroupId) return;
+            deleteGroup(currentGroupId);
+            showView('viewGroups');
+        }
+
+        // ========== PDF ==========
+        function downloadGroupPDF() {
+            const group = groups.find(g => g.id === currentGroupId);
+            if (!group) return;
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+            const W = 210, margin = 24, cW = W - margin * 2;
+            let y = 20;
+
+            const bk = [26,26,26], gr = [136,136,136], lg = [224,224,224], bgG = [240,240,240], wh = [255,255,255];
+            const grn = [46,204,113], rd = [231,76,60];
+
+            function cTxt(t,yP,sz,cl,st){doc.setFontSize(sz);doc.setTextColor(...cl);doc.setFont('helvetica',st||'normal');doc.text(t,W/2,yP,{align:'center'});}
+            function rRect(x,yR,w,h,r,fc){doc.setFillColor(...fc);doc.roundedRect(x,yR,w,h,r,r,'F');}
+            function hL(x1,yL,x2,cl){doc.setDrawColor(...cl);doc.setLineWidth(0.3);doc.line(x1,yL,x2,yL);}
+            function chk(n){if(y+n>278){doc.addPage();doc.setFillColor(...bgG);doc.rect(0,0,W,297,'F');y=20;}}
+
+            // BG
+            doc.setFillColor(...bgG); doc.rect(0,0,W,297,'F');
+
+            // Header
+            cTxt('FIN',y,16,bk,'bold'); y+=5;
+            cTxt('SILVER',y,16,gr,'normal'); y+=12;
+            cTxt('CUANTO DEBO',y,22,bk,'bold'); y+=7;
+            cTxt(formatDate(group.date),y,9,gr,'normal'); y+=5;
+            hL(margin,y,W-margin,lg); y+=10;
+
+            // Group name
+            cTxt(group.name.toUpperCase(),y,16,bk,'bold'); y+=10;
+
+            // Summary card
+            chk(35);
+            rRect(margin,y,cW,28,3,wh);
+            doc.setFillColor(...bk); doc.rect(margin,y,cW,1.5,'F');
+
+            doc.setFontSize(7);doc.setTextColor(...gr);doc.setFont('helvetica','normal');
+            doc.text('TOTAL GASTADO',W/2-25,y+10,{align:'center'});
+            doc.text('POR PERSONA',W/2+25,y+10,{align:'center'});
+
+            doc.setFontSize(18);doc.setTextColor(...bk);doc.setFont('helvetica','bold');
+            doc.text('$'+formatNum(group.total),W/2-25,y+21,{align:'center'});
+            doc.text('$'+formatNum(group.perPerson),W/2+25,y+21,{align:'center'});
+
+            y += 34;
+
+            // Transfers
+            chk(20 + group.transfers.length * 12);
+            rRect(margin,y,cW,12+group.transfers.length*12+4,3,wh);
+            doc.setFontSize(7);doc.setTextColor(...gr);doc.setFont('helvetica','normal');
+            doc.text('QUIÉN LE PAGA A QUIÉN',margin+12,y+9);
+
+            let tY = y + 18;
+            if (group.transfers.length === 0) {
+                doc.setFontSize(11);doc.setTextColor(...gr);doc.setFont('helvetica','normal');
+                doc.text('¡Ya están todos parejos!',W/2,tY,{align:'center'});
+                tY += 6;
+            } else {
+                group.transfers.forEach((t,i) => {
+                    doc.setFontSize(11);doc.setFont('helvetica','bold');doc.setTextColor(...bk);
+                    doc.text(t.from,margin+12,tY);
+                    doc.setFont('helvetica','normal');doc.setTextColor(...gr);
+                    doc.text('→',W/2-5,tY);
+                    doc.setFont('helvetica','bold');doc.setTextColor(...bk);
+                    doc.text(t.to,W/2+5,tY);
+                    doc.setFont('helvetica','bold');
+                    doc.text('$'+formatNum(t.amount),W-margin-12,tY,{align:'right'});
+                    if(i<group.transfers.length-1) hL(margin+10,tY+4,W-margin-10,[238,238,238]);
+                    tY += 12;
+                });
+            }
+            y = tY + 8;
+
+            // Balances
+            chk(20 + group.balances.length * 12);
+            rRect(margin,y,cW,12+group.balances.length*12+4,3,wh);
+            doc.setFontSize(7);doc.setTextColor(...gr);doc.setFont('helvetica','normal');
+            doc.text('BALANCE POR PERSONA',margin+12,y+9);
+
+            let bY = y + 18;
+            group.balances.forEach((b,i) => {
+                doc.setFontSize(11);doc.setFont('helvetica','normal');doc.setTextColor(...bk);
+                doc.text(b.name,margin+12,bY);
+                doc.setFontSize(8);doc.setTextColor(...gr);
+                doc.text('Gastó $'+formatNum(b.paid),margin+12,bY+5);
+
+                const cls = b.balance > 0.01 ? grn : b.balance < -0.01 ? rd : gr;
+                const sign = b.balance > 0.01 ? '+' : '';
+                doc.setFontSize(14);doc.setFont('helvetica','bold');doc.setTextColor(...cls);
+                doc.text(sign+'$'+formatNum(Math.abs(b.balance)),W-margin-12,bY+2,{align:'right'});
+
+                if(i<group.balances.length-1) hL(margin+10,bY+8,W-margin-10,[238,238,238]);
+                bY += 12;
+            });
+            y = bY + 10;
+
+            // Footer
+            chk(15);
+            hL(margin,y,W-margin,lg); y+=8;
+            doc.setFontSize(7);doc.setFont('helvetica','normal');doc.setTextColor(...gr);
+            const ft='GRUPO ';const fb='FIN-SILVER';
+            doc.text(ft,W/2-doc.getTextWidth(fb)/2-doc.getTextWidth(ft)+1,y);
+            doc.setFont('helvetica','bold');doc.setTextColor(...bk);
+            doc.text(fb,W/2-doc.getTextWidth(fb)/2+doc.getTextWidth(ft),y);
+
+            doc.save(`cuanto-debo-${group.name.toLowerCase().replace(/\s+/g,'-')}.pdf`);
+            showNotification('PDF descargado');
+        }
+
+        // ========== STORAGE ==========
+        function saveToStorage() {
+            localStorage.setItem('cuantodebo_groups', JSON.stringify(groups));
+        }
+
+        // ========== UTILS ==========
+        function formatNum(n) {
+            return n.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+        }
+
+        function formatDate(iso) {
+            const d = new Date(iso);
+            return d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        function esc(t) { const d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
+
+        function showNotification(m) {
+            const e = document.getElementById('notification');
+            e.textContent = m;
+            e.classList.add('show');
+            setTimeout(() => e.classList.remove('show'), 3000);
+        }
+
+        // Enter keys
+        document.getElementById('newGroupName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('newName').focus(); });
+        document.getElementById('newPaid').addEventListener('keydown', e => { if(e.key==='Enter') addParticipant(); });
+        document.getElementById('newName').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('newPaid').focus(); });
+
+        // Init
+        renderGroups();
+    </script>
+</body>
+</html>
